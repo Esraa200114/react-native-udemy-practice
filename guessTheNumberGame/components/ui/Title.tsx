@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from 'react-native'
+import { StyleSheet, Text, Platform } from 'react-native'
 import React, { PropsWithChildren, ReactNode } from 'react'
 
 type TitleProps = PropsWithChildren<{
@@ -19,9 +19,12 @@ const styles = StyleSheet.create({
         // fontWeight: "bold",
         color: "white",
         textAlign: "center",
-        borderWidth: 2,
+        borderWidth: Platform.OS === 'android' ? 2 : 0,
         borderColor: "white",
         padding: 12,
-        fontFamily: "Open Sans Bold"
+        fontFamily: "Open Sans Bold",
+        width: 300,
+        maxWidth: '90%',
+        alignSelf: 'center'
     }
 })
