@@ -3,16 +3,29 @@ import React from 'react'
 import { MEALS } from '../data/dummy-data'
 import Meal from '../models/meal'
 import MealItem from '../components/MealItem'
+import { RootStackParamList } from '../../App'
+import { RouteProp } from '@react-navigation/native'
 
-const MealsOverviewScreen = ({ route }) => {
+type MealsOverviewScreenRouteProp = RouteProp<RootStackParamList, 'MealsOverview'>;
+
+const MealsOverviewScreen: React.FC<{ route: MealsOverviewScreenRouteProp }> = ({ route }) => {
 
     const { categoryId } = route.params
 
     const displayedMeals = MEALS.filter((item) => item.categoryIds.indexOf(categoryId) >= 0)
 
     function renderMealItem(item: Meal) {
+
+        const mealItemProps = {
+            title: item.title,
+            image: item.imageUrl,
+            affordability: item.affordability,
+            complexity: item.complexity,
+            duration: item.duration
+        }
+
         return <MealItem
-            title={item.title} />
+            {...mealItemProps} />
     }
 
     return (
