@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, Pressable, Image, Platform } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
+import MealDetails from './MealDetails'
 
 type MealItemProps = {
+    id: string,
     title: string,
     image: string,
     duration: number,
@@ -9,20 +12,23 @@ type MealItemProps = {
     complexity: string
 }
 
-const MealItem = ({ title, image, affordability, complexity, duration }: MealItemProps) => {
+const MealItem = ({ id, title, image, affordability, complexity, duration }: MealItemProps) => {
+
+    const navigation = useNavigation()
+
+    const showMealDetails = () => {
+        navigation.navigate('MealDetails', { mealId: id })
+    }
+
     return (
         <View style={styles.mealItem}>
-            <Pressable android_ripple={{ color: '#ccc' }} style={({ pressed }) => pressed ? styles.buttonPressed : null}>
+            <Pressable android_ripple={{ color: '#ccc' }} style={({ pressed }) => pressed ? styles.buttonPressed : null} onPress={showMealDetails}>
                 <View>
                     <View>
                         <Image source={{ uri: image }} style={styles.image} />
                         <Text style={styles.title}>{title}</Text>
                     </View>
-                    <View style={styles.details}>
-                        <Text style={styles.detailItem}>{duration}m</Text>
-                        <Text style={styles.detailItem}>{complexity.toUpperCase()}</Text>
-                        <Text style={styles.detailItem}>{affordability.toUpperCase()}</Text>
-                    </View>
+                    <MealDetails affordability={affordability} complexity={complexity} duration={duration} />
                 </View>
             </Pressable>
         </View>
@@ -57,16 +63,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         margin: 8
-    },
-    details: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 8,
-    },
-    detailItem: {
-        marginHorizontal: 4,
-        fontSize: 12,
     },
     buttonPressed: {
         opacity: 0.5

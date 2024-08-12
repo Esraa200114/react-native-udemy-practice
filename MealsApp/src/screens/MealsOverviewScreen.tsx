@@ -1,10 +1,10 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { MEALS } from '../data/dummy-data'
+import { FlatList, StyleSheet, View } from 'react-native'
+import React, { useLayoutEffect } from 'react'
+import { CATEGORIES, MEALS } from '../data/dummy-data'
 import Meal from '../models/meal'
 import MealItem from '../components/MealItem'
 import { RootStackParamList } from '../../App'
-import { RouteProp } from '@react-navigation/native'
+import { RouteProp, useNavigation } from '@react-navigation/native'
 
 type MealsOverviewScreenRouteProp = RouteProp<RootStackParamList, 'MealsOverview'>;
 
@@ -12,11 +12,23 @@ const MealsOverviewScreen: React.FC<{ route: MealsOverviewScreenRouteProp }> = (
 
     const { categoryId } = route.params
 
+    const navigation = useNavigation()
+
     const displayedMeals = MEALS.filter((item) => item.categoryIds.indexOf(categoryId) >= 0)
+
+    useLayoutEffect(() => {
+
+        const categoryTitle = CATEGORIES.find((category) => category.id === categoryId)?.title;
+
+        navigation.setOptions({
+            title: categoryTitle,
+        })
+    }, [categoryId, navigation])
 
     function renderMealItem(item: Meal) {
 
         const mealItemProps = {
+            id: item.id,
             title: item.title,
             image: item.imageUrl,
             affordability: item.affordability,
@@ -25,7 +37,8 @@ const MealsOverviewScreen: React.FC<{ route: MealsOverviewScreenRouteProp }> = (
         }
 
         return <MealItem
-            {...mealItemProps} />
+            {...mealItemProps
+            } />
     }
 
     return (
